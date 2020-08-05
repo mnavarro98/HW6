@@ -3,7 +3,7 @@ Given:  tone_data (defines frequencies for digits),
         load_wav (loads a wav file)
 """
 
-from numpy.fft import fft
+from numpy.fft import fft, fftfreq
 from scipy.io import wavfile
 # from scipy.optimize import linprog  # for Q2
 
@@ -59,15 +59,20 @@ def load_wav(fname):
 
 
 def read_digit(rate, data, length):
-    """ (b)  function to recognize a digit given a wave file 'file'"""
-    df = fft(data)
-    freqs = fft
-    freq_pairing = (0, 0)
+    """ (b)  function to recognize a digit given a wave file 'file'""" 
+    df = abs(fft(data))
+    freq_pairing = ()
+    
+    
+    for i in range(len(df)//2):
+        if df[i] > 10**(-10) and len(freq_pairing)<=2:
+            print(freq_pairing)
+            freq_pairing += (i/length,)
     
     tones, nums, pairs = tone_data()
     digit = None
     
-    for i in len(nums):
+    for i in range(len(nums)):
         if nums[i] == freq_pairing:
             digit = i
     
@@ -91,11 +96,9 @@ def read_sevendigits(file):
         
         
 if __name__ == '__main__':
-    read_digit(load_wav(0.wav))
-    read_digit(load_wav(5.wav))
-    read_sevendigits(dial.wav)
-    read_sevendigits(dial2.wav)
-    
-    
-    
-    
+    x, y, z = load_wav('0.wav')#This is not working, it seems like the sound files provided are either extremely noisy or perhaps my algorithm is wrong but almost every element in the fourier transform is nonzero 
+    read_digit(x, y, z)
+    x, y, z = load_wav('5.wav')
+    read_digit(x, y, z)
+    read_sevendigits('dial.wav')
+    read_sevendigits('dial2.wav')
